@@ -1,32 +1,18 @@
-// const fs = require("fs");
-// const path = require("path");
-
-
-// const folderList = []
-// function recursion(folderPaths) {
-    
-//     folderPaths.forEach(folderPath => {
-//         const result = fs.readdirSync(folderPath);
-//         const folders = result.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory());
-//         const fullPathFolders = folders.map(folder => path.resolve(folderPath, folder));
-//         if (folderPaths.length === 0) {
-//             return;
-//         }
-//         // console.log(fullPathFolders);
-//         fullPathFolders.forEach(folderPath => folderList.push(folderPath));
-//         recursion(fullPathFolders);
-//     });
-// }
-// recursion([path.resolve(__dirname, "unzipFile")]);
-// console.log(folderList)
-
-
 const fs = require("fs");
 const path = require("path");
 
 const folderList = [];
 const fileExtensions = new Set();
+const lineCounts = {};
 
+// Helper function to count lines in a file
+function countLines(filePath) {
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    const lines = fileContent.split("\n").length;
+    return lines;
+}
+
+// Recursive function to traverse directories
 function recursion(folderPaths) {
     if (folderPaths.length === 0) {
         return;
@@ -37,11 +23,20 @@ function recursion(folderPaths) {
         const folders = result.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory());
         const files = result.filter(res => !fs.lstatSync(path.resolve(folderPath, res)).isDirectory());
 
-        // Add file extensions to the set
+        // Process files
         files.forEach(file => {
+            const filePath = path.resolve(folderPath, file);
             const ext = path.extname(file);
             if (ext) {
                 fileExtensions.add(ext);
+
+                // Initialize line count for this extension if not already done
+                if (!lineCounts[ext]) {
+                    lineCounts[ext] = 0;
+                }
+
+                // Count lines in the file and add to the count for this extension
+                lineCounts[ext] += countLines(filePath);
             }
         });
 
@@ -60,4 +55,4 @@ recursion([path.resolve(__dirname, "unzipFile")]);
 
 console.log("Folders:", folderList);
 console.log("File Extensions:", [...fileExtensions]);
-
+console.log("Line Counts:", lineCounts);
