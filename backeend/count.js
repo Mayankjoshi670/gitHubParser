@@ -56,3 +56,33 @@ recursion([path.resolve(__dirname, "unzipFile")]);
 console.log("Folders:", folderList);
 console.log("File Extensions:", [...fileExtensions]);
 console.log("Line Counts:", lineCounts);
+
+
+
+//  count no of types of files presnt ; 
+// example .js type we have 12 files 
+
+
+function fileTypeCounter(folderPath) {
+    const fileTypes = {};
+  
+    function readDirectory(dir) {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      entries.forEach(entry => {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          readDirectory(fullPath);
+        } else {
+          const ext = path.extname(fullPath).toLowerCase();
+          fileTypes[ext] = (fileTypes[ext] || 0) + 1;
+        }
+      });
+    }
+  
+    readDirectory(folderPath);
+    console.log('File types in unzipped folder:', fileTypes);
+  }
+
+
+
+fileTypeCounter("unzipFile") ; 
