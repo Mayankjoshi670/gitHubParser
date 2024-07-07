@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "adm-zip": "^0.5.14",
-    "decompress": "^4.2.1"
+    "cors": "^2.8.5",
+    "decompress": "^4.2.1",
+    "express": "^4.19.2"
   }
 }
