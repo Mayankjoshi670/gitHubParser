@@ -9,11 +9,21 @@ router.post('/url', (req, res) => {
 
     const urlArray = breakUrl(url) ;
     
-
     const userName = urlArray[2]  ; 
     const projectName = urlArray[3] ; 
-    const updatedUrl = mergeUrl(userName ,projectName) ; 
+    const updatedUrl = mergeUrl(userName ,projectName) ;  
+
     console.log(updatedUrl);
+
+//    const flag = dawnloadZip(updatedUrl) ; 
+//     if(flag){
+//         console.log("Download successful") ;
+//         unzip() ; 
+//     }
+//     else{
+//         console.log("dawnload failed") ; 
+//     }
+
     res.json({
         receivedUrl: url
     });

@@ -6,8 +6,7 @@ const decompress = require("decompress") ;
 
 // URL of the ZIP file to download
 const fileUrl = 'https://codeload.github.com/Mayankjoshi670/E-commerce/zip/refs/heads/master';
-// const fileUrl = 'https://codeload.github.com/Mayankjoshi670/casino/zip/refs/heads/master';
-// Destination path for the downloaded file
+ 
 const downloadPath = path.join(__dirname, 'master.zip');
 
 // Function to download the file
@@ -26,15 +25,7 @@ function downloadFile(url, dest) {
 
         // unzip the file and save it 
         unzip(dest)  ; 
-        // (async ()=>{
-        //     try{
-        //         const file = await decompress("master.zip" , "dist",) ; 
-        //         console.log("unzip the file") ; 
-        //     }
-        //     catch(error){
-        //         console.log("error generated" + error) ; 
-        //     }
-        // })
+        
       });
     } else {
       console.error(`Failed to download file: ${response.statusCode}`);
