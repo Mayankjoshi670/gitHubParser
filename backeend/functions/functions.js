@@ -15,6 +15,25 @@ function mergeUrl(userName, projectName) {
     return `https://codeload.github.com/${userName}/${projectName}/zip/refs/heads/master`;
 }
 
+
+ function clear(){
+  const parentDir = path.resolve(__dirname, '..');
+const dir = path.join(parentDir, 'unzipped');
+
+console.log(dir);  
+
+try {
+    fs.rmSync(dir, { recursive: true, force: true });
+    console.log(`Deleted folder and its contents: ${dir}`);
+} catch (err) {
+    console.error(`Error deleting folder: ${err}`);
+}
+ }
+
+ 
+
+
+
 async function downloadZip(url) {
     function downloadingZip(url, dest) {
         return new Promise((resolve, reject) => {
@@ -60,5 +79,6 @@ module.exports = {
     breakUrl,
     mergeUrl,
     downloadZip,
-    unzip
+    unzip , 
+    clear
 };
