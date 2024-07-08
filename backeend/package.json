@@ -4,5 +4,11 @@
     "cors": "^2.8.5",
     "decompress": "^4.2.1",
     "express": "^4.19.2"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
