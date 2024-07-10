@@ -1,83 +1,91 @@
-const fs = require("fs");
+const fs = require("fs") ;
 const path = require("path");
 
 const fileExtensions = new Set();
 const lineCounts = {};
- 
+
 function countLines(filePath) {
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const lines = fileContent.split("\n").length;
-    console.log("  not able to print")
-    return lines;
+    try {
+        const fileContent = fs.readFileSync(filePath, "utf-8");
+        const lines = fileContent.split("\n").length;
+        return lines;
+    } catch (err) {
+        console.error("Error reading file:", err);
+        return 0; // or handle the error appropriately
+    }
 }
- 
+
 function recursion(folderPaths) {
-    if (folderPaths.length === 0) {
-        return;
-    }
+    for (const folderPath of folderPaths) {
+        try {
+            const result = fs.readdirSync(folderPath);
+            const fullPaths = result.map(file => path.resolve(folderPath, file));
 
-    folderPaths.forEach(folderPath => {
-        const result = fs.readdirSync(folderPath);
-        const folders = result.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory());
-        const files = result.filter(res => !fs.lstatSync(path.resolve(folderPath, res)).isDirectory());
+            for (const fullPath of fullPaths) {
+                const stats = fs.lstatSync(fullPath);
 
-        // Process files
-        files.forEach(file => {
-            const filePath = path.resolve(folderPath, file);
-            const ext = path.extname(file);
-            if (ext) {
-                fileExtensions.add(ext);
- 
-                if (!lineCounts[ext]) {
-                    lineCounts[ext] = 0;
+                if (stats.isDirectory()) {
+                    // Recursively process subfolders
+                    recursion([fullPath]);
+                } else if (stats.isFile()) {
+                    // Process files
+                    const ext = path.extname(fullPath);
+                    if (ext) {
+                        fileExtensions.add(ext);
+
+                        if (!lineCounts[ext]) {
+                            lineCounts[ext] = 0;
+                        }
+                        lineCounts[ext] += countLines(fullPath);
+                    }
                 }
-                console.log("  inside file "); 
-                lineCounts[ext] += countLines(filePath);
             }
-        });
-
-        const fullPathFolders = folders.map(folder => path.resolve(folderPath, folder));
-     
-        recursion(fullPathFolders);
-    });
-}
- 
-function fileTypeCounter(folderPath) {
-    const fileTypes = {};
-
-    function readDirectory(dir) {
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
-        entries.forEach(entry => {
-            const fullPath = path.join(dir, entry.name);
-            if (entry.isDirectory()) {
-                readDirectory(fullPath); // Recursive call for directories
-            } else {
-                const ext = path.extname(fullPath).toLowerCase();
-                fileTypes[ext] = (fileTypes[ext] || 0) + 1;  
-            }
-        });
+        } catch (err) {
+            console.error("Error in recursion:", err);
+        }
     }
-
-    readDirectory(folderPath); 
-    console.log('File types in unzipped folder:', fileTypes);
-    console.log('Line counts:', lineCounts);
-    console.log(fileExtensions);
-    return fileTypes 
 }
 
-function findResult() {
-  recursion([path.resolve(__dirname, "unzipped")]);
+const fileTypes = {};
+
+function fileTypeCounter(folderPath) {
+    try {
+        function readDirectorySync(dir) {
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+            for (const entry of entries) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                    readDirectorySync(fullPath); // Recursive call for directories
+                } else {
+                    const ext = path.extname(fullPath).toLowerCase();
+                    fileTypes[ext] = (fileTypes[ext] || 0) + 1;
+                }
+            }
+        }
+        
+        readDirectorySync(folderPath);
+        return fileTypes;
+    } catch (err) {
+        console.error("Error in fileTypeCounter:", err);
+        throw err; // Rethrow the error or handle it appropriately
+    }
 }
 
+
+async function findResult() {
+    try {
+        await fileTypeCounter(__dirname);
+        await recursion([path.resolve(__dirname, "unzipped")]);
+        
+        console.log("File types:", fileTypes);
+        console.log("Line counts:", lineCounts);
+    } catch (err) {
+        console.error("Error in findResult:", err);
+    }
+}
  
-
-
 module.exports = {
-    fileTypeCounter,
-    fileExtensions,
     lineCounts,
-    recursion , findResult 
+    findResult,
+    fileTypes
 };
-
-
- 

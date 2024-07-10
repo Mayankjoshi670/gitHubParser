@@ -17,22 +17,20 @@ function mergeUrl(userName, projectName) {
  
 
  
-function clear() {
+ async function clear() {
     const parentDir = path.resolve(__dirname, '..');
-    const dir = path.join(parentDir, 'unzipped');
-   
-    console.log(dir);
-
+    const dir = path.join(parentDir, 'unzipped'); 
+    console.log("inside clear function "+dir); 
    try{
-        const files = fs.readdirSync(dir);
+        const files =  await fs.readdirSync(dir);
         if (files.length === 0) {
             console.log('The folder is already empty.');
             return true ;
         }
         
         for (const file of files) {
-            const filePath = path.join(dir, file);
-            fs.rmSync(filePath, { recursive: true, force: true });
+            const filePath = await path.join(dir, file);
+            await fs.rmSync(filePath, { recursive: true, force: true });
         }
        
  
@@ -51,17 +49,17 @@ function clear() {
 
 
 async function downloadZip(url) {
-    function downloadingZip(url, dest) {
-        return new Promise((resolve, reject) => {
-            const file = fs.createWriteStream(dest);
+ async    function downloadingZip(url, dest) {
+        return new Promise(async (resolve, reject) => {
+            const file =  await    fs.createWriteStream(dest);
 
-            https.get(url, (response) => {
+             https.get(url,async  (response) => {
                 if (response.statusCode === 200) {
-                    response.pipe(file);
-                    file.on('finish', () => {
-                        file.close();
-                        resolve(true);
-                          unzip(dest) ; 
+               await    response.pipe(file);
+                    file.on('finish',async  () => {
+                      await  file.close();
+                                await   resolve(true);
+                            await    unzip(dest) ; 
                     });
                 } else {
                     reject(new Error(`Failed to download file: ${response.statusCode}`));

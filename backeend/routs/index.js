@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { breakUrl, mergeUrl, downloadZip, unzip , clear } = require('../functions/functions'); // Corrected import
-const { fileTypeCounter , fileExtensions , lineCounts , recursion  , findResult} = require('../count');
+const { breakUrl, mergeUrl, downloadZip , clear  } = require('../functions/functions'); // Corrected import
+const {   
+    lineCounts,
+     findResult ,fileTypes} = require('../count');
 router.post('/url', async (req, res) => {
     const url = req.body.url;
     console.log(url);
@@ -14,17 +16,21 @@ router.post('/url', async (req, res) => {
     console.log(updatedUrl);
   
     // await   clear()
+     
+      
+            
             await downloadZip(updatedUrl);
             console.log("Download successful. Starting analysis.");
-  
- await  findResult()  ;  
-        //   await   clear()
+            
+            await  findResult()  ;  
+            console.log("before clear .................")
+            // await   clear()
+         
 
             res.json({
                 receivedUrl: url,
-               
-                fileExtensions,
-                lineCounts
+   lineCounts,
+    fileTypes
             });
         
    
