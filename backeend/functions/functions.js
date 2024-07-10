@@ -2,7 +2,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const decompress = require('decompress');
-
+const {fileTypeCounter} = require('../count');
 const downloadPath = path.join(__dirname, '../download.zip');
 const unzipPath = path.join(__dirname, '../unzipped');
 
@@ -85,6 +85,7 @@ async function  unzip(dest){
   try{
              const file = await decompress(dest , unzipPath) ; 
              console.log("unzip the file") ; 
+            //  const result = await fileTypeCounter("unzipped"); 
          }
          catch(error){
              console.log("error generated" + error) ; 
@@ -94,12 +95,7 @@ async function  unzip(dest){
 
 
 
-function getContent(){
-    const parentDir = path.resolve(__dirname, '..');
-    const dir = path.join(parentDir, 'unzipped');
-    
-}
-
+//  clear();
 module.exports = {
     breakUrl,
     mergeUrl,
