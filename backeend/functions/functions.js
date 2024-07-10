@@ -66,26 +66,23 @@ async function downloadZip(url) {
                 } else {
                     reject(new Error(`Failed to download file: ${response.statusCode}`));
                 }
-            }).on('error', (err) => {
-                // Delete the file in case of an error
+            }).on('error', (err) => { 
                 fs.unlink(dest, () => {
                     reject(new Error(`Failed to write file: ${err.message}`));
                 });
             });
         });
     }
-
-    // Wait for the download to complete
+ 
     await downloadingZip(url, downloadPath);
-    // await unzip(downloadPath);
+ 
 }
 
 async function  unzip(dest){
 
   try{
              const file = await decompress(dest , unzipPath) ; 
-             console.log("unzip the file") ; 
-            //  const result = await fileTypeCounter("unzipped"); 
+             console.log("unzip the file") ;  
          }
          catch(error){
              console.log("error generated" + error) ; 

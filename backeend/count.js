@@ -3,16 +3,14 @@ const path = require("path");
 
 const fileExtensions = new Set();
 const lineCounts = {};
-
-// Helper function to count lines in a file
+ 
 function countLines(filePath) {
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const lines = fileContent.split("\n").length;
     console.log("  not able to print")
     return lines;
 }
-
-// Recursive function to traverse directories
+ 
 function recursion(folderPaths) {
     if (folderPaths.length === 0) {
         return;
@@ -29,31 +27,21 @@ function recursion(folderPaths) {
             const ext = path.extname(file);
             if (ext) {
                 fileExtensions.add(ext);
-
-                // Initialize line count for this extension if not already done
+ 
                 if (!lineCounts[ext]) {
                     lineCounts[ext] = 0;
                 }
-                console.log("  inside file ");
-                // Count lines in the file and add to the count for this extension
+                console.log("  inside file "); 
                 lineCounts[ext] += countLines(filePath);
             }
         });
 
         const fullPathFolders = folders.map(folder => path.resolve(folderPath, folder));
-        
-        // Collect folder paths for logging
-        
-
-        // Recursive call for subdirectories
+     
         recursion(fullPathFolders);
     });
 }
-
-// Start the recursion from the "unzipped" directory
-// recursion([path.resolve(__dirname, "unzipped")]);
-
-// Function to count file types in a directory
+ 
 function fileTypeCounter(folderPath) {
     const fileTypes = {};
 
@@ -65,12 +53,12 @@ function fileTypeCounter(folderPath) {
                 readDirectory(fullPath); // Recursive call for directories
             } else {
                 const ext = path.extname(fullPath).toLowerCase();
-                fileTypes[ext] = (fileTypes[ext] || 0) + 1; // Counting file types
+                fileTypes[ext] = (fileTypes[ext] || 0) + 1;  
             }
         });
     }
 
-    readDirectory(folderPath); // Start reading from the specified folder
+    readDirectory(folderPath); 
     console.log('File types in unzipped folder:', fileTypes);
     console.log('Line counts:', lineCounts);
     console.log(fileExtensions);
@@ -81,7 +69,7 @@ function findResult() {
   recursion([path.resolve(__dirname, "unzipped")]);
 }
 
-//   fileTypeCounter("unzipped");
+ 
 
 
 module.exports = {

@@ -12,31 +12,16 @@ router.post('/url', async (req, res) => {
     const projectName = urlArray[3];
     const updatedUrl = mergeUrl(userName, projectName);
     console.log(updatedUrl);
-
-    
-         
-
-            // Download and unzip new files
+  
             await downloadZip(updatedUrl);
             console.log("Download successful. Starting analysis.");
-
-            // Perform operations on unzipped files
-            
-// recursion([path.resolve("../"+__dirname, "unzipped")]);
- await  findResult()  ; 
-            // const result = await fileTypeCounter("unzipped");
-            // console.log("File type counter result:", result);
-
-            // Log fileExtensions and lineCounts
-            // console.log("File extensions:", fileExtensions);
-            // console.log("Line counts:", lineCounts);
-
-            // Return response with data
+  
+ await  findResult()  ;  
           await   clear()
 
             res.json({
                 receivedUrl: url,
-                // result,
+               
                 fileExtensions,
                 lineCounts
             });
@@ -44,7 +29,6 @@ router.post('/url', async (req, res) => {
    
 });
 
-
-
+ 
 
 module.exports = router;
