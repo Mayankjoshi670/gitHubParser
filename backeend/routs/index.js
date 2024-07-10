@@ -13,11 +13,12 @@ router.post('/url', async (req, res) => {
     const updatedUrl = mergeUrl(userName, projectName);
     console.log(updatedUrl);
   
+    // await   clear()
             await downloadZip(updatedUrl);
             console.log("Download successful. Starting analysis.");
   
  await  findResult()  ;  
-          await   clear()
+        //   await   clear()
 
             res.json({
                 receivedUrl: url,
