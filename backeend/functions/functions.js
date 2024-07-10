@@ -1,5 +1,4 @@
-const https = require('https');
-const express = require('express');
+const https = require('https'); 
 const fs = require('fs');
 const path = require('path');
 const decompress = require('decompress');
@@ -15,20 +14,37 @@ function mergeUrl(userName, projectName) {
     return `https://codeload.github.com/${userName}/${projectName}/zip/refs/heads/master`;
 }
 
+ 
 
- function clear(){
-  const parentDir = path.resolve(__dirname, '..');
-const dir = path.join(parentDir, 'unzipped');
+ 
+function clear() {
+    const parentDir = path.resolve(__dirname, '..');
+    const dir = path.join(parentDir, 'unzipped');
+   
+    console.log(dir);
 
-console.log(dir);  
-
-try {
-    fs.rmSync(dir, { recursive: true, force: true });
-    console.log(`Deleted folder and its contents: ${dir}`);
-} catch (err) {
-    console.error(`Error deleting folder: ${err}`);
+   try{
+        const files = fs.readdirSync(dir);
+        if (files.length === 0) {
+            console.log('The folder is already empty.');
+            return true ;
+        }
+        
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            fs.rmSync(filePath, { recursive: true, force: true });
+        }
+       
+ 
+        console.log(`Deleted contents of the folder: ${dir}`);
+        return true ; 
+    }catch(err){
+        console.log("error"+ err) ; 
+        return false ; 
+    }
 }
- }
+
+
 
  
 
@@ -45,7 +61,7 @@ async function downloadZip(url) {
                     file.on('finish', () => {
                         file.close();
                         resolve(true);
-                        unzip(dest) ; 
+                          unzip(dest) ; 
                     });
                 } else {
                     reject(new Error(`Failed to download file: ${response.statusCode}`));
@@ -61,6 +77,7 @@ async function downloadZip(url) {
 
     // Wait for the download to complete
     await downloadingZip(url, downloadPath);
+    // await unzip(downloadPath);
 }
 
 async function  unzip(dest){
@@ -73,6 +90,14 @@ async function  unzip(dest){
              console.log("error generated" + error) ; 
          }
 
+}
+
+
+
+function getContent(){
+    const parentDir = path.resolve(__dirname, '..');
+    const dir = path.join(parentDir, 'unzipped');
+    
 }
 
 module.exports = {

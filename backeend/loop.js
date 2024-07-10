@@ -33,7 +33,7 @@ function recursion(folderPaths) {
 }
 
 // Start the recursion from the "unzipFile" directory
-recursion([path.resolve(__dirname, "unzipFile")]);
+recursion([path.resolve(__dirname, "unzipped")]);
 
 console.log("Folders:", folderList);
 console.log("File Extensions:", [...fileExtensions]);
