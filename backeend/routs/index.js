@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { breakUrl, mergeUrl, downloadZip , clear  } = require('../functions/functions'); // Corrected import
+const { breakUrl, mergeUrl, downloadZip    } = require('../functions/functions'); // Corrected import
 const {   
     lineCounts,
      findResult ,fileTypes} = require('../count');

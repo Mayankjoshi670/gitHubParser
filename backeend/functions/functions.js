@@ -1,8 +1,7 @@
 const https = require('https'); 
 const fs = require('fs');
 const path = require('path');
-const decompress = require('decompress');
-const {fileTypeCounter} = require('../count');
+const decompress = require('decompress'); 
 const downloadPath = path.join(__dirname, '../download.zip');
 const unzipPath = path.join(__dirname, '../unzipped');
 
@@ -13,13 +12,10 @@ function breakUrl(url) {
 function mergeUrl(userName, projectName) {
     return `https://codeload.github.com/${userName}/${projectName}/zip/refs/heads/master`;
 }
-
- 
-
  
  async function clear() {
-    const parentDir = path.resolve(__dirname, '..');
-    const dir = path.join(parentDir, 'unzipped'); 
+    const parentDir = await  path.resolve(__dirname, '..');
+    const dir =  await  path.join(parentDir, 'unzipped'); 
     console.log("inside clear function "+dir); 
    try{
         const files =  await fs.readdirSync(dir);

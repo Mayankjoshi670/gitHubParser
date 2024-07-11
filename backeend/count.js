@@ -1,6 +1,6 @@
 const fs = require("fs") ;
 const path = require("path");
-
+const {clear } = require("./functions/functions")
 const fileExtensions = new Set();
 const lineCounts = {};
 
@@ -15,7 +15,7 @@ function countLines(filePath) {
     }
 }
 
-function recursion(folderPaths) {
+ async function recursion(folderPaths) {
     for (const folderPath of folderPaths) {
         try {
             const result = fs.readdirSync(folderPath);
@@ -43,7 +43,7 @@ function recursion(folderPaths) {
         } catch (err) {
             console.error("Error in recursion:", err);
         }
-    }
+    } 
 }
 
 const fileTypes = {};
@@ -74,9 +74,9 @@ function fileTypeCounter(folderPath) {
 
 async function findResult() {
     try {
-        await fileTypeCounter(__dirname);
         await recursion([path.resolve(__dirname, "unzipped")]);
-        
+        await fileTypeCounter(__dirname);
+        await clear() 
         console.log("File types:", fileTypes);
         console.log("Line counts:", lineCounts);
     } catch (err) {
