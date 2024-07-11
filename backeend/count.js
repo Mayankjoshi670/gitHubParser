@@ -1,6 +1,6 @@
 const fs = require("fs") ;
 const path = require("path");
-const {clear } = require("./functions/functions")
+
 const fileExtensions = new Set();
 const lineCounts = {};
 
@@ -15,15 +15,21 @@ function countLines(filePath) {
     }
 }
 
- async function recursion(folderPaths) {
+function recursion(folderPaths) {
     for (const folderPath of folderPaths) {
         try {
+
+          // validate if the folder is existing or not. If not then create it.
+          if (!fs.existsSync(folderPath)) {
+            console.log(`Directory ${folderPath} doesn't exist. Creating it.`);
+            fs.mkdirSync(folderPath, { recursive: true });
+          } 
+        
             const result = fs.readdirSync(folderPath);
             const fullPaths = result.map(file => path.resolve(folderPath, file));
 
             for (const fullPath of fullPaths) {
                 const stats = fs.lstatSync(fullPath);
-
                 if (stats.isDirectory()) {
                     // Recursively process subfolders
                     recursion([fullPath]);
@@ -43,7 +49,7 @@ function countLines(filePath) {
         } catch (err) {
             console.error("Error in recursion:", err);
         }
-    } 
+    }
 }
 
 const fileTypes = {};
@@ -74,9 +80,9 @@ function fileTypeCounter(folderPath) {
 
 async function findResult() {
     try {
-        await recursion([path.resolve(__dirname, "unzipped")]);
         await fileTypeCounter(__dirname);
-        await clear() 
+        await recursion([path.resolve(__dirname, "unzipped")]);
+        
         console.log("File types:", fileTypes);
         console.log("Line counts:", lineCounts);
     } catch (err) {
